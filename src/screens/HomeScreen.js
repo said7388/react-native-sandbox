@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
 
   const getUserData = async () => {
@@ -13,6 +13,9 @@ const HomeScreen = () => {
       const data = jsonValue != null ? JSON.parse(jsonValue) : null;
       // const token = jsonToken != null ? JSON.parse(jsonToken) : null;
       console.log(jsonToken)
+      if (!jsonToken) {
+        navigation.navigate('Login')
+      }
       setUserData(data);
     } catch (error) {
       console.error('Error retrieving user data:', error);
