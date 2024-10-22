@@ -11,8 +11,6 @@ const HomeScreen = ({ navigation }) => {
       const jsonValue = await AsyncStorage.getItem('userData');
       const jsonToken = await AsyncStorage.getItem('userToken');
       const data = jsonValue != null ? JSON.parse(jsonValue) : null;
-      // const token = jsonToken != null ? JSON.parse(jsonToken) : null;
-      // console.log(jsonToken)
       if (!jsonToken) {
         navigation.navigate('Login')
       }
