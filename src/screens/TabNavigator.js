@@ -18,7 +18,7 @@ const ScreenWithNavbar = ({ children, title }) => {
   );
 };
 
-const TabNavigator = () => {
+const TabNavigator = ({ navigation }) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -71,7 +71,7 @@ const TabNavigator = () => {
       >
         {() => (
           <ScreenWithNavbar title="Profile">
-            <ProfileScreen />
+            <ProfileScreen navigation={navigation} />
           </ScreenWithNavbar>
         )}
       </Tab.Screen>
