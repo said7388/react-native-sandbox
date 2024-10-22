@@ -23,7 +23,7 @@ const App = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Home"
+          name="Main"
           component={TabNavigator}
           options={{ headerShown: false }}
         />

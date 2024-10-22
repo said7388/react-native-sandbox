@@ -1,10 +1,22 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // For icons
 import HomeScreen from './HomeScreen';
+import Navbar from './Navbar';
 import ProfileScreen from './ProfileScreen';
 import SettingsScreen from './SettingsScreen';
 
 const Tab = createBottomTabNavigator();
+
+// Wrapper component for screens with Navbar
+const ScreenWithNavbar = ({ children, title }) => {
+  return (
+    <View className="flex-1">
+      <Navbar title={title} />
+      {children}
+    </View>
+  );
+};
 
 const TabNavigator = () => {
   return (
@@ -25,17 +37,44 @@ const TabNavigator = () => {
         tabBarActiveTintColor: '#42a5f5',
         tabBarInactiveTintColor: 'gray',
         tabBarStyle: {
-          height: 60, 
+          height: 60,
           paddingBottom: 5,
         },
         tabBarItemStyle: {
-          paddingVertical: 5, 
+          paddingVertical: 5,
         },
       })}
     >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen
+        name="Home"
+        options={{ headerShown: false }}
+      >
+        {() => (
+          <ScreenWithNavbar title="Home Page">
+            <HomeScreen />
+          </ScreenWithNavbar>
+        )}
+      </Tab.Screen>
+      <Tab.Screen
+        name="Settings"
+        options={{ headerShown: false }}
+      >
+        {() => (
+          <ScreenWithNavbar title="Settings">
+            <SettingsScreen />
+          </ScreenWithNavbar>
+        )}
+      </Tab.Screen>
+      <Tab.Screen
+        name="Profile"
+        options={{ headerShown: false }}
+      >
+        {() => (
+          <ScreenWithNavbar title="Profile">
+            <ProfileScreen />
+          </ScreenWithNavbar>
+        )}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 };

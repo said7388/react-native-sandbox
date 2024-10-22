@@ -17,7 +17,7 @@ const LoginScreen = ({ navigation }) => {
       // Save the login response data in AsyncStorage
       await AsyncStorage.setItem('userToken', response.data.data.token); 
       await AsyncStorage.setItem('userData', JSON.stringify(response.data.data.user)); 
-      navigation.replace('Home');
+      navigation.replace('Main');
     } catch (error) {
       if (error.response) {
         Alert.alert('Error', error.response.data.message || 'Login failed!');
