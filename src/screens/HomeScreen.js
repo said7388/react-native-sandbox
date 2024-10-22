@@ -1,7 +1,7 @@
 // HomeScreen.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 
 const HomeScreen = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
@@ -12,7 +12,7 @@ const HomeScreen = ({ navigation }) => {
       const jsonToken = await AsyncStorage.getItem('userToken');
       const data = jsonValue != null ? JSON.parse(jsonValue) : null;
       // const token = jsonToken != null ? JSON.parse(jsonToken) : null;
-      console.log(jsonToken)
+      // console.log(jsonToken)
       if (!jsonToken) {
         navigation.navigate('Login')
       }
@@ -27,31 +27,15 @@ const HomeScreen = ({ navigation }) => {
   }, []);
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>User Information</Text>
+    <View className="flex-1 justify-center items-center bg-white">
+      <Text className="text-2xl mb-5">User Information</Text>
       {userData ? (
-        <Text style={styles.text}>Welcome, {userData.name}!</Text>
+        <Text className="text-lg">Welcome, {userData.name}!</Text>
       ) : (
-        <Text style={styles.text}>Loading user data...</Text>
+        <Text className="text-lg">Loading user data...</Text>
       )}
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    marginBottom: 20,
-  },
-  text: {
-    fontSize: 18,
-  },
-});
 
 export default HomeScreen;

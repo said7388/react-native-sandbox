@@ -1,8 +1,7 @@
-// LoginScreen.js
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Alert, Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, Text, TextInput, View } from 'react-native';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -16,8 +15,8 @@ const LoginScreen = ({ navigation }) => {
       });
 
       // Save the login response data in AsyncStorage
-      await AsyncStorage.setItem('userToken', response.data.data.token); // Save token or other data
-      await AsyncStorage.setItem('userData', JSON.stringify(response.data.data.user)); // Save user data
+      await AsyncStorage.setItem('userToken', response.data.data.token); 
+      await AsyncStorage.setItem('userData', JSON.stringify(response.data.data.user)); 
       navigation.replace('Home');
     } catch (error) {
       if (error.response) {
@@ -27,51 +26,36 @@ const LoginScreen = ({ navigation }) => {
       } else {
         Alert.alert('Error', error.message);
       }
-    }
+    };
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
+    <View className="flex-1 justify-center p-5 bg-white">
+      <Text className="text-center text-3xl mb-5">
+        Account Login
+      </Text>
       <TextInput
-        style={styles.input}
         placeholder="Email"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        className="h-12 border-[#ccc] border mb-5 px-5 rounded-md"
       />
       <TextInput
-        style={styles.input}
         placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        className="h-12 border-[#ccc] border mb-5 px-5 rounded-md"
       />
-      <Button title="Login" onPress={handleLogin} />
+      <Button
+        title="Login"
+        onPress={handleLogin}
+        className="bg-blue-500 rounded-md"
+      />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 32,
-    marginBottom: 20,
-    textAlign: 'center',
-  },
-  input: {
-    height: 50,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 20,
-    paddingHorizontal: 10,
-  },
-});
 
 export default LoginScreen;

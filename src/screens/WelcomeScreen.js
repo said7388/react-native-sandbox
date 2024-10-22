@@ -1,46 +1,35 @@
 // WelcomeScreen.js
 import React, { useEffect, useRef } from 'react';
-import { Animated, StyleSheet, View } from 'react-native';
+import { Animated, View } from 'react-native';
 
 const WelcomeScreen = ({ navigation }) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial value for opacity: 0
+  const fadeAnim = useRef(new Animated.Value(0)).current; 
 
   useEffect(() => {
     // Fade in animation
     Animated.timing(fadeAnim, {
-      toValue: 1, // Final value for opacity: 1
-      duration: 2000, // Duration of the animation
-      useNativeDriver: true, // Use native driver for better performance
+      toValue: 1,
+      duration: 2000,
+      useNativeDriver: true,
     }).start();
 
     const timer = setTimeout(() => {
-      navigation.replace('Login'); // Change 'Home' to the name of your main screen
-    }, 3000); // 3 seconds before navigating
+      navigation.replace('Login');
+    }, 3000);
 
-    return () => clearTimeout(timer); // Clean up the timer on unmount
+    return () => clearTimeout(timer);
   }, [fadeAnim, navigation]);
 
   return (
-    <View style={styles.container}>
-      <Animated.Text style={[styles.welcomeText, { opacity: fadeAnim }]}>
+    <View className="flex-1 justify-center items-center bg-white">
+      <Animated.Text
+        style={[{ opacity: fadeAnim }]}
+        className="text-white text-2xl font-bold"
+      >
         Welcome to My App!
       </Animated.Text>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#000', // Black background
-  },
-  welcomeText: {
-    color: '#fff', // White text
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-});
 
 export default WelcomeScreen;
