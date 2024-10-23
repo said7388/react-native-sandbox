@@ -2,7 +2,7 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const TaskItem = ({ task, onToggleCompletion, onDeleteTask }) => {
+const TaskItem = ({ task, onToggleCompletion, onDeleteTask, onToggleFavorite }) => {
   return (
     <View style={styles.taskItem}>
       <TouchableOpacity onPress={onToggleCompletion}>
@@ -19,12 +19,16 @@ const TaskItem = ({ task, onToggleCompletion, onDeleteTask }) => {
         </Text>
         <Text style={styles.categoryText}>Category: {task.category}</Text>
       </View>
-      <TouchableOpacity onPress={onDeleteTask}>
-        <FontAwesome
-          name="trash"
+      <TouchableOpacity onPress={onToggleFavorite}>
+        <AntDesign
+          name={task.favorite ? 'star' : 'staro'}
           size={24}
-          color="red"
+          color={task.favorite ? 'gold' : 'gray'}
+          style={styles.favoriteIcon}
         />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={onDeleteTask}>
+        <FontAwesome name="trash" size={24} color="red" style={styles.deleteIcon} />
       </TouchableOpacity>
     </View>
   );
@@ -57,6 +61,9 @@ const styles = StyleSheet.create({
   completedTask: {
     textDecorationLine: 'line-through',
     color: 'gray',
+  },
+  favoriteIcon: {
+    marginLeft: 10,
   },
   deleteIcon: {
     marginLeft: 10,

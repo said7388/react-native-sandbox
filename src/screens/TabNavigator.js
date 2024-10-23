@@ -27,7 +27,7 @@ const TabNavigator = ({ navigation }) => {
           if (route.name === 'Home') {
             iconName = 'home-outline';
           } else if (route.name === 'Settings') {
-            iconName = 'settings-outline';
+            iconName = 'star';
           } else if (route.name === 'Profile') {
             iconName = 'person-outline';
           }

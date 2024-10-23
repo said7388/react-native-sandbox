@@ -7,9 +7,9 @@ const TaskInput = ({ onAddTask }) => {
   const [category, setCategory] = useState('Personal');
 
   const handleAddTask = () => {
-    if (task.trim()) { // Check if task is not empty
+    if (task.trim()) { 
       onAddTask(task, category);
-      setTask(''); // Clear input after adding
+      setTask('');
     }
   };
 
@@ -21,10 +21,10 @@ const TaskInput = ({ onAddTask }) => {
         value={task}
         onChangeText={(text) => setTask(text)}
       />
-      <View className="flex-row mb-2">
+      <View className="flex-row mb-2 border border-gray-400 rounded w-full">
         <Picker
           selectedValue={category}
-          className="flex-1" // Takes up remaining space in the row
+          className="flex-1"
           onValueChange={(itemValue) => setCategory(itemValue)}
         >
           <Picker.Item label="Personal" value="Personal" />

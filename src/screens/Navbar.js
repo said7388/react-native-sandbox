@@ -8,7 +8,7 @@ const Navbar = ({ title }) => {
   };
 
   return (
-    <View className="flex flex-row justify-between items-center px-6 py-4 bg-gray-100 border-b border-gray-300 mt-5">
+    <View className="flex flex-row justify-between items-center px-6 py-5 bg-gray-100 border-b border-gray-300 mt-5">
       <Text className="text-2xl font-bold">
         {title}
       </Text>
