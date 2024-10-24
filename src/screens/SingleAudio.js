@@ -1,9 +1,9 @@
-import { FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { AudioContext } from '../context/AudioContext';
+import ControllAudio from './ControllAudio';
 
 const SingleAudio = ({ file }) => {
   const [downloading, setDownloading] = useState(false);
@@ -111,19 +111,12 @@ const SingleAudio = ({ file }) => {
   return (
     <View className="flex-row items-center p-4 bg-gray-50 border-b border-gray-200 w-full rounded">
       <Text className="flex-1 text-base font-medium">{file.name}</Text>
-      {localUri ? (
-        <View className="flex-row items-center gap-2">
-          <TouchableOpacity onPress={confirmDeleteFile}>
-            <FontAwesome name="trash" size={24} color="red" />
-          </TouchableOpacity>
-        </View>
-      ) : downloading ? (
-        <Text>Downloading...</Text>
-      ) : (
-        <TouchableOpacity onPress={downloadAudio}>
-          <FontAwesome name="download" size={24} color="green" />
-        </TouchableOpacity>
-      )}
+      <ControllAudio
+        localUri={localUri}
+        confirmDeleteFile={confirmDeleteFile}
+        downloadAudio={downloadAudio}
+        downloading={downloading}
+      />
     </View>
   );
 };
