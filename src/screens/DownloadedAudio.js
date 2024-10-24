@@ -11,14 +11,10 @@ function DownloadedAudio() {
   return (
     <ScrollView className="w-full p-4 flex flex-col gap-2 h-full overflow-y-scroll">
       {downloads.map((file, i) => (
-        <AudioPlayer
-          key={i}
-          file={file}
-          setDownloads={setDownloads}
-        />
+        <AudioPlayer key={i} file={file} setDownloads={setDownloads} />
       ))}
     </ScrollView>
   );
-};
+}
 
 export default DownloadedAudio;

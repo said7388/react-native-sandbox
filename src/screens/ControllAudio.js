@@ -2,7 +2,12 @@ import { FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 
-const ControllAudio = ({ localUri, confirmDeleteFile, downloading, downloadAudio }) => {
+const ControllAudio = ({
+  localUri,
+  confirmDeleteFile,
+  downloading,
+  downloadAudio,
+}) => {
   return (
     <View>
       {localUri ? (
@@ -12,9 +17,7 @@ const ControllAudio = ({ localUri, confirmDeleteFile, downloading, downloadAudio
           </TouchableOpacity>
         </View>
       ) : downloading ? (
-        <Text>
-          Downloading...
-        </Text>
+        <Text>Downloading...</Text>
       ) : (
         <TouchableOpacity onPress={downloadAudio}>
           <FontAwesome name="download" size={24} color="green" />

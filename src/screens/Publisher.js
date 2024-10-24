@@ -39,13 +39,19 @@ const Publisher = () => {
         client.current.setClientRole('host');
 
         // Join the channel and capture the host's UID
-        await client.current.join(APP_ID, res.channelName, res.token || null, null);
+        await client.current.join(
+          APP_ID,
+          res.channelName,
+          res.token || null,
+          null,
+        );
 
         // Create and publish local tracks
-        const [micTrack, camTrack] = await AgoraRTC.createMicrophoneAndCameraTracks().catch((error) => {
-          console.log('Failed to create tracks:', error);
-          return [];
-        });
+        const [micTrack, camTrack] =
+          await AgoraRTC.createMicrophoneAndCameraTracks().catch((error) => {
+            console.log('Failed to create tracks:', error);
+            return [];
+          });
 
         if (camTrack) {
           // Play the local video track in the localVideoRef
@@ -75,10 +81,7 @@ const Publisher = () => {
 
   return (
     <View style={styles.container}>
-      <View
-        ref={localVideoRef}
-        style={styles.localVideo}
-      />
+      <View ref={localVideoRef} style={styles.localVideo} />
     </View>
   );
 };

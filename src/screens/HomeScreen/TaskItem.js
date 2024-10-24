@@ -1,8 +1,14 @@
+ 
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-const TaskItem = ({ task, onToggleCompletion, onDeleteTask, onToggleFavorite }) => {
+const TaskItem = ({
+  task,
+  onToggleCompletion,
+  onDeleteTask,
+  onToggleFavorite,
+}) => {
   return (
     <View className="flex-row items-center p-4 bg-[#f8f8f8] border-b border-[#ddd] mt-2 rounded">
       <TouchableOpacity onPress={onToggleCompletion}>
@@ -13,12 +19,13 @@ const TaskItem = ({ task, onToggleCompletion, onDeleteTask, onToggleFavorite }) 
         />
       </TouchableOpacity>
       <View className="ml-2.5 flex-1">
-        <Text className="text-base" style={[task.completed && styles.completedTask]}>
+        <Text
+          className="text-base"
+          style={[task.completed && styles.completedTask]}
+        >
           {task.value}
         </Text>
-        <Text className="text-gray-400 text-xs">
-          Category: {task.category}
-        </Text>
+        <Text className="text-gray-400 text-xs">Category: {task.category}</Text>
       </View>
       <TouchableOpacity className="ml-2.5" onPress={onToggleFavorite}>
         <AntDesign
@@ -39,7 +46,6 @@ const styles = StyleSheet.create({
     textDecorationLine: 'line-through',
     color: 'gray',
   },
-
 });
 
 export default TaskItem;

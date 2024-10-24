@@ -1,3 +1,4 @@
+ 
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 
@@ -12,7 +13,13 @@ const CategoryTabs = ({ filterCategory, setFilterCategory }) => {
           style={[styles.tab, filterCategory === cat && styles.activeTab]}
           onPress={() => setFilterCategory(cat)}
         >
-          <Text style={filterCategory === cat ? styles.activeTabText : styles.tabText}>{cat}</Text>
+          <Text
+            style={
+              filterCategory === cat ? styles.activeTabText : styles.tabText
+            }
+          >
+            {cat}
+          </Text>
         </TouchableOpacity>
       ))}
     </ScrollView>

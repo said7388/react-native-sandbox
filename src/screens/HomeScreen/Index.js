@@ -31,7 +31,16 @@ const HomeScreen = () => {
 
   const addTask = (task, category) => {
     if (task.length > 0) {
-      const newTasks = [{ key: Math.random().toString(), value: task, completed: false, category, favorite: false }, ...tasks];
+      const newTasks = [
+        {
+          key: Math.random().toString(),
+          value: task,
+          completed: false,
+          category,
+          favorite: false,
+        },
+        ...tasks,
+      ];
       setTasks(newTasks);
       saveTasks(newTasks); // Save to AsyncStorage
     }
@@ -39,7 +48,7 @@ const HomeScreen = () => {
 
   const toggleTaskCompletion = (taskKey) => {
     const updatedTasks = tasks.map((task) =>
-      task.key === taskKey ? { ...task, completed: !task.completed } : task
+      task.key === taskKey ? { ...task, completed: !task.completed } : task,
     );
     setTasks(updatedTasks);
     saveTasks(updatedTasks); // Save to AsyncStorage
@@ -53,14 +62,14 @@ const HomeScreen = () => {
 
   const toggleFavorite = (taskKey) => {
     const updatedTasks = tasks.map((task) =>
-      task.key === taskKey ? { ...task, favorite: !task.favorite } : task
+      task.key === taskKey ? { ...task, favorite: !task.favorite } : task,
     );
     setTasks(updatedTasks);
     saveTasks(updatedTasks); // Save to AsyncStorage
   };
 
   const filteredTasks = tasks.filter((task) =>
-    filterCategory === 'All' ? true : task.category === filterCategory
+    filterCategory === 'All' ? true : task.category === filterCategory,
   );
 
   useEffect(() => {
@@ -70,7 +79,10 @@ const HomeScreen = () => {
   return (
     <View className="p-8">
       <TaskInput onAddTask={addTask} />
-      <CategoryTabs filterCategory={filterCategory} setFilterCategory={setFilterCategory} />
+      <CategoryTabs
+        filterCategory={filterCategory}
+        setFilterCategory={setFilterCategory}
+      />
       <FlatList
         data={filteredTasks}
         renderItem={({ item }) => (

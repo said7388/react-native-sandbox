@@ -1,4 +1,6 @@
+ 
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // For icons
 import DownloadedAudio from './DownloadedAudio';
@@ -11,6 +13,7 @@ const Tab = createBottomTabNavigator();
 
 // Wrapper component for screens with Navbar
 const ScreenWithNavbar = ({ children, title }) => {
+
   return (
     <View className="flex-1 h-full">
       <Navbar title={title} />
@@ -48,40 +51,28 @@ const TabNavigator = ({ navigation }) => {
         },
       })}
     >
-      <Tab.Screen
-        name="Home"
-        options={{ headerShown: false }}
-      >
+      <Tab.Screen name="Home" options={{ headerShown: false }}>
         {() => (
           <ScreenWithNavbar title="Home Page">
             <HomeScreen />
           </ScreenWithNavbar>
         )}
       </Tab.Screen>
-      <Tab.Screen
-        name="Settings"
-        options={{ headerShown: false }}
-      >
+      <Tab.Screen name="Settings" options={{ headerShown: false }}>
         {() => (
           <ScreenWithNavbar title="Settings">
             <SettingsScreen />
           </ScreenWithNavbar>
         )}
       </Tab.Screen>
-      <Tab.Screen
-        name="Downloads"
-        options={{ headerShown: false }}
-      >
+      <Tab.Screen name="Downloads" options={{ headerShown: false }}>
         {() => (
           <ScreenWithNavbar title="Downloads">
             <DownloadedAudio />
           </ScreenWithNavbar>
         )}
       </Tab.Screen>
-      <Tab.Screen
-        name="Profile"
-        options={{ headerShown: false }}
-      >
+      <Tab.Screen name="Profile" options={{ headerShown: false }}>
         {() => (
           <ScreenWithNavbar title="Profile">
             <ProfileScreen navigation={navigation} />

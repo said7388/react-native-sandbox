@@ -4,7 +4,7 @@ import { Animated, View } from 'react-native';
 
 const WelcomeScreen = ({ navigation }) => {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  
+
   useEffect(() => {
     // Fade in animation
     Animated.timing(fadeAnim, {

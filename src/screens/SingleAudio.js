@@ -1,3 +1,4 @@
+ 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -18,7 +19,7 @@ const SingleAudio = ({ file }) => {
     } catch (error) {
       console.error('Error retrieving downloads:', error);
       return [];
-    };
+    }
   };
 
   // Function to download the audio file
@@ -26,16 +27,24 @@ const SingleAudio = ({ file }) => {
     try {
       setDownloading(true);
       const localFilePath = `${FileSystem.documentDirectory}${file.name}`;
-      const downloadResult = await FileSystem.downloadAsync(file.url, localFilePath);
+      const downloadResult = await FileSystem.downloadAsync(
+        file.url,
+        localFilePath,
+      );
 
       if (downloadResult.status === 200) {
         const downloads = await getDownloads();
-        const isDownloaded = downloads.find((download) => download === file.name);
+        const isDownloaded = downloads.find(
+          (download) => download === file.name,
+        );
         if (!isDownloaded) {
           const updatedDownloads = [...downloads, file.name];
           setDownloads(updatedDownloads);
-          await AsyncStorage.setItem('downloads', JSON.stringify(updatedDownloads));
-        };
+          await AsyncStorage.setItem(
+            'downloads',
+            JSON.stringify(updatedDownloads),
+          );
+        }
         Alert.alert('Success', `${file.name} downloaded successfully!`);
         setLocalUri(localFilePath);
       } else {
@@ -71,6 +80,7 @@ const SingleAudio = ({ file }) => {
       await FileSystem.deleteAsync(filePath);
       return true;
     } catch (error) {
+      console.error('Error deleting file:', error);
       return false;
     }
   };
@@ -84,7 +94,7 @@ const SingleAudio = ({ file }) => {
         { text: 'Cancel', style: 'cancel' },
         { text: 'Delete', onPress: handleDeleteFile, style: 'destructive' },
       ],
-      { cancelable: true }
+      { cancelable: true },
     );
   }, [handleDeleteFile, file.name]);
 
@@ -99,10 +109,10 @@ const SingleAudio = ({ file }) => {
 
         if (fileInfo.exists && isDownloaded) {
           setLocalUri(localFilePath);
-        };
+        }
       } catch (error) {
         Alert.alert('Error', `Error loading ${file.name}: ${error.message}`);
-      };
+      }
     };
 
     loadFile();

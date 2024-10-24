@@ -23,23 +23,19 @@ const ProfileScreen = ({ navigation }) => {
     // Clear user data and token from AsyncStorage
     await AsyncStorage.removeItem('userData');
     await AsyncStorage.removeItem('userToken');
-    
+
     // Navigate to the Login screen
     navigation.navigate('Login');
   };
 
   const confirmLogout = () => {
-    Alert.alert(
-      "Logout",
-      "Are you sure you want to logout?",
-      [
-        {
-          text: "Cancel",
-          style: "cancel"
-        },
-        { text: "OK", onPress: handleLogout }
-      ]
-    );
+    Alert.alert('Logout', 'Are you sure you want to logout?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      { text: 'OK', onPress: handleLogout },
+    ]);
   };
 
   useEffect(() => {

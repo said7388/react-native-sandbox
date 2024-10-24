@@ -1,3 +1,4 @@
+ 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio } from 'expo-av';
 import React, { createContext, useEffect, useState } from 'react';
@@ -51,7 +52,7 @@ export const AudioProvider = ({ children }) => {
       return data;
     } catch (error) {
       console.error('Error retrieving user data:', error);
-    };
+    }
   };
 
   useEffect(() => {

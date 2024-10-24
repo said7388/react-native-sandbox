@@ -1,12 +1,19 @@
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import { AudioContext } from '../context/AudioContext';
 
 const AudioPlayer = ({ file: fileName, setDownloads }) => {
-  const { playAudio, pauseAudio, isPlaying, currentAudio } = useContext(AudioContext);
+  const { playAudio, pauseAudio, isPlaying, currentAudio } =
+    useContext(AudioContext);
   const [sound, setSound] = useState(null);
   const [localUri, setLocalUri] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,7 +26,7 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
     } catch (error) {
       console.error('Error retrieving downloads:', error);
       return [];
-    };
+    }
   }, []);
 
   // Function to delete the audio file
@@ -46,6 +53,7 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
       await FileSystem.deleteAsync(filePath);
       return true;
     } catch (error) {
+      console.error('Error deleting file:', error);
       return false;
     }
   };
@@ -59,7 +67,7 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
         { text: 'Cancel', style: 'cancel' },
         { text: 'Delete', onPress: handleDeleteFile, style: 'destructive' },
       ],
-      { cancelable: true }
+      { cancelable: true },
     );
   }, [handleDeleteFile, fileName]);
 
@@ -102,16 +110,18 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
   if (isLoading) {
     return (
       <View className="flex-row items-center p-4 bg-gray-50 border-b border-gray-200 w-full rounded">
-        <Text className="flex-1 text-base font-medium">Loading {fileName}...</Text>
+        <Text className="flex-1 text-base font-medium">
+          Loading {fileName}...
+        </Text>
       </View>
     );
-  };
+  }
 
   return (
     <View className="flex-row items-center p-4 bg-gray-50 border-b border-gray-200 w-full rounded">
       <Text className="flex-1 text-base font-medium">{fileName}</Text>
       <View className="flex-row items-center gap-2">
-        {(isPlaying && currentAudio === localUri) ? (
+        {isPlaying && currentAudio === localUri ? (
           <TouchableOpacity onPress={pauseAudio}>
             <AntDesign name="pausecircleo" size={24} color="orange" />
           </TouchableOpacity>

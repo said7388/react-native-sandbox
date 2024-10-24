@@ -1,3 +1,4 @@
+ 
 import { Picker } from '@react-native-picker/picker';
 import React, { useState } from 'react';
 import { Button, TextInput, View } from 'react-native';
@@ -7,7 +8,7 @@ const TaskInput = ({ onAddTask }) => {
   const [category, setCategory] = useState('Personal');
 
   const handleAddTask = () => {
-    if (task.trim()) { 
+    if (task.trim()) {
       onAddTask(task, category);
       setTask('');
     }
