@@ -6,7 +6,7 @@ import CategoryTabs from './CategoryTabs';
 import TaskInput from './TaskInput';
 import TaskItem from './TaskItem';
 
-const HomeScreen = ({ navigation }) => {
+const HomeScreen = () => {
   const [tasks, setTasks] = useState([]);
   const [filterCategory, setFilterCategory] = useState('All'); // Default category filter
 

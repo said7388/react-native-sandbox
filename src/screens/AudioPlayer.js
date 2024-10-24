@@ -10,7 +10,6 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
   const [sound, setSound] = useState(null);
   const [localUri, setLocalUri] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [progress, setProgress] = useState(0);
   const progressIntervalRef = useRef(null);
 
   const getDownloads = useCallback(async () => {
