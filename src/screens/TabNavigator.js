@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { View } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons'; // For icons
+import DownloadedAudio from './DownloadedAudio';
 import HomeScreen from './HomeScreen/Index';
 import Navbar from './Navbar';
 import ProfileScreen from './ProfileScreen';
@@ -30,6 +31,8 @@ const TabNavigator = ({ navigation }) => {
             iconName = 'play';
           } else if (route.name === 'Profile') {
             iconName = 'person-outline';
+          } else if (route.name === 'Downloads') {
+            iconName = 'download-outline';
           }
 
           return <Icon name={iconName} size={size} color={color} />;
@@ -62,6 +65,16 @@ const TabNavigator = ({ navigation }) => {
         {() => (
           <ScreenWithNavbar title="Settings">
             <SettingsScreen />
+          </ScreenWithNavbar>
+        )}
+      </Tab.Screen>
+      <Tab.Screen
+        name="Downloads"
+        options={{ headerShown: false }}
+      >
+        {() => (
+          <ScreenWithNavbar title="Downloads">
+            <DownloadedAudio />
           </ScreenWithNavbar>
         )}
       </Tab.Screen>
