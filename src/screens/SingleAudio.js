@@ -46,7 +46,6 @@ const SingleAudio = ({ file }) => {
     }
   }, [file]);
 
-  // Function to delete the audio file
   const deleteFile = useCallback(async () => {
     if (!localUri) {
       Alert.alert('Error', `No file found for ${file.name}`);

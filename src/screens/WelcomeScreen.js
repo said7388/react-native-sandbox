@@ -14,14 +14,14 @@ const WelcomeScreen = ({ navigation }) => {
     }).start();
 
     const timer = setTimeout(() => {
-      navigation.replace('Login');
+      navigation.replace('Main');
     }, 3000);
 
     return () => clearTimeout(timer);
   }, [fadeAnim, navigation]);
 
   return (
-    <View className="flex-1 justify-center items-center bg-white">
+    <View className="flex-1 justify-center items-center bg-black">
       <Animated.Text
         style={[{ opacity: fadeAnim }]}
         className="text-white text-2xl font-bold"

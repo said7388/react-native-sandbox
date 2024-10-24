@@ -2,16 +2,17 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
 
 const AudioPlayer = ({ file: fileName, setDownloads }) => {
   const [sound, setSound] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [localUri, setLocalUri] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Loading state for file handling
+  const [isLoading, setIsLoading] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const progressIntervalRef = useRef(null);
 
-  // Helper function to retrieve downloaded files from AsyncStorage
   const getDownloads = useCallback(async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('downloads');
@@ -19,32 +20,48 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
     } catch (error) {
       console.error('Error retrieving downloads:', error);
       return [];
-    }
+    };
   }, []);
 
-  // Function to load and play the downloaded audio
+  // Function to play the downloaded audio
   const playAudio = useCallback(async () => {
     if (!localUri) {
       Alert.alert('Error', `No file found for ${fileName}`);
       return;
-    };
+    }
 
     try {
-      // Stop and unload any existing sound
+      // Stop existing sound if it's already playing
       if (sound) {
         await sound.stopAsync();
         await sound.unloadAsync();
+        clearInterval(progressIntervalRef.current);
+        setIsPlaying(false);
+        setProgress(0);
       }
 
-      const { sound: newSound } = await Audio.Sound.createAsync({ uri: localUri });
+      // Load new sound
+      const { sound: newSound, status } = await Audio.Sound.createAsync({ uri: localUri });
       setSound(newSound);
       setIsPlaying(true);
 
-      // Play the sound and handle playback status updates
+      // Play the sound
       await newSound.playAsync();
+
+      // Set up progress tracking
+      progressIntervalRef.current = setInterval(async () => {
+        const status = await newSound.getStatusAsync();
+        if (status.isLoaded && status.isPlaying) {
+          setProgress((status.positionMillis / status.durationMillis) * 100);
+        }
+      }, 100);
+
+      // Handle audio ending
       newSound.setOnPlaybackStatusUpdate((status) => {
         if (status.didJustFinish) {
+          clearInterval(progressIntervalRef.current);
           setIsPlaying(false);
+          setProgress(0);
         }
       });
     } catch (error) {
@@ -52,10 +69,11 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
     }
   }, [fileName, localUri, sound]);
 
-  // Function to pause the audio playback
+  // Pause the audio
   const pauseAudio = useCallback(async () => {
     if (sound) {
       await sound.pauseAsync();
+      clearInterval(progressIntervalRef.current);
       setIsPlaying(false);
     }
   }, [sound]);
@@ -76,18 +94,16 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
     } catch (error) {
       Alert.alert('Error', `Error deleting ${fileName}: ${error.message}`);
     }
-  }, [localUri, fileName, getDownloads]);
+  }, [fileName, getDownloads]);
 
   const deleteFromFileSystem = async (fileName) => {
     try {
       const filePath = `${FileSystem.documentDirectory}${fileName}`;
       await FileSystem.deleteAsync(filePath);
-      // console.log(`${fileName} deleted from file system.`);
       return true;
     } catch (error) {
-      // console.error(`Error deleting ${fileName} from file system:`, error);
       return false;
-    };
+    }
   };
 
   // Confirm deletion before proceeding
@@ -133,6 +149,7 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
     return () => {
       if (sound) {
         sound.unloadAsync();
+        clearInterval(progressIntervalRef.current);
       }
     };
   }, [sound]);
@@ -144,7 +161,7 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
         <Text className="flex-1 text-base font-medium">Loading {fileName}...</Text>
       </View>
     );
-  }
+  };
 
   return (
     <View className="flex-row items-center p-4 bg-gray-50 border-b border-gray-200 w-full rounded">
