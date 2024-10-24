@@ -11,7 +11,7 @@ const Tab = createBottomTabNavigator();
 // Wrapper component for screens with Navbar
 const ScreenWithNavbar = ({ children, title }) => {
   return (
-    <View className="flex-1">
+    <View className="flex-1 h-full">
       <Navbar title={title} />
       {children}
     </View>
@@ -27,7 +27,7 @@ const TabNavigator = ({ navigation }) => {
           if (route.name === 'Home') {
             iconName = 'home-outline';
           } else if (route.name === 'Settings') {
-            iconName = 'star';
+            iconName = 'play';
           } else if (route.name === 'Profile') {
             iconName = 'person-outline';
           }
