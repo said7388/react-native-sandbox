@@ -1,13 +1,13 @@
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { AudioContext } from '../context/AudioContext';
 
 const AudioPlayer = ({ file: fileName, setDownloads }) => {
+  const { playAudio, pauseAudio, isPlaying, currentAudio } = useContext(AudioContext);
   const [sound, setSound] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [localUri, setLocalUri] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
@@ -23,61 +23,6 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
     };
   }, []);
 
-  // Function to play the downloaded audio
-  const playAudio = useCallback(async () => {
-    if (!localUri) {
-      Alert.alert('Error', `No file found for ${fileName}`);
-      return;
-    }
-
-    try {
-      // Stop existing sound if it's already playing
-      if (sound) {
-        await sound.stopAsync();
-        await sound.unloadAsync();
-        clearInterval(progressIntervalRef.current);
-        setIsPlaying(false);
-        setProgress(0);
-      }
-
-      // Load new sound
-      const { sound: newSound, status } = await Audio.Sound.createAsync({ uri: localUri });
-      setSound(newSound);
-      setIsPlaying(true);
-
-      // Play the sound
-      await newSound.playAsync();
-
-      // Set up progress tracking
-      progressIntervalRef.current = setInterval(async () => {
-        const status = await newSound.getStatusAsync();
-        if (status.isLoaded && status.isPlaying) {
-          setProgress((status.positionMillis / status.durationMillis) * 100);
-        }
-      }, 100);
-
-      // Handle audio ending
-      newSound.setOnPlaybackStatusUpdate((status) => {
-        if (status.didJustFinish) {
-          clearInterval(progressIntervalRef.current);
-          setIsPlaying(false);
-          setProgress(0);
-        }
-      });
-    } catch (error) {
-      Alert.alert('Error', `Error playing ${fileName}: ${error.message}`);
-    }
-  }, [fileName, localUri, sound]);
-
-  // Pause the audio
-  const pauseAudio = useCallback(async () => {
-    if (sound) {
-      await sound.pauseAsync();
-      clearInterval(progressIntervalRef.current);
-      setIsPlaying(false);
-    }
-  }, [sound]);
-
   // Function to delete the audio file
   const handleDeleteFile = useCallback(async () => {
     try {
@@ -89,7 +34,7 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
       setDownloads(updatedDownloads);
       setLocalUri(null);
       setSound(null);
-      setIsPlaying(false);
+      // setIsPlaying(false);
       Alert.alert('Success', `${fileName} deleted successfully!`);
     } catch (error) {
       Alert.alert('Error', `Error deleting ${fileName}: ${error.message}`);
@@ -167,13 +112,13 @@ const AudioPlayer = ({ file: fileName, setDownloads }) => {
     <View className="flex-row items-center p-4 bg-gray-50 border-b border-gray-200 w-full rounded">
       <Text className="flex-1 text-base font-medium">{fileName}</Text>
       <View className="flex-row items-center gap-2">
-        {!isPlaying ? (
-          <TouchableOpacity onPress={playAudio}>
-            <AntDesign name="playcircleo" size={24} color="green" />
-          </TouchableOpacity>
-        ) : (
+        {(isPlaying && currentAudio === localUri) ? (
           <TouchableOpacity onPress={pauseAudio}>
             <AntDesign name="pausecircleo" size={24} color="orange" />
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity onPress={() => playAudio(localUri)}>
+            <AntDesign name="playcircleo" size={24} color="green" />
           </TouchableOpacity>
         )}
         <TouchableOpacity onPress={confirmDeleteFile}>

@@ -3,10 +3,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { AudioContext } from '../context/AudioContext';
 
 const SingleAudio = ({ file }) => {
   const [downloading, setDownloading] = useState(false);
   const [localUri, setLocalUri] = useState(null);
+  const { setDownloads } = React.useContext(AudioContext);
 
   // Helper function to get downloaded files from AsyncStorage
   const getDownloads = async () => {
@@ -31,6 +33,7 @@ const SingleAudio = ({ file }) => {
         const isDownloaded = downloads.find((download) => download === file.name);
         if (!isDownloaded) {
           const updatedDownloads = [...downloads, file.name];
+          setDownloads(updatedDownloads);
           await AsyncStorage.setItem('downloads', JSON.stringify(updatedDownloads));
         };
         Alert.alert('Success', `${file.name} downloaded successfully!`);
@@ -46,26 +49,31 @@ const SingleAudio = ({ file }) => {
     }
   }, [file]);
 
-  const deleteFile = useCallback(async () => {
-    if (!localUri) {
-      Alert.alert('Error', `No file found for ${file.name}`);
-      return;
-    }
-
+  // Function to delete the audio file
+  const handleDeleteFile = useCallback(async () => {
     try {
-      await FileSystem.deleteAsync(localUri);
-      setLocalUri(null);
-
+      await deleteFromFileSystem(file.name);
       const downloads = await getDownloads();
       const updatedDownloads = downloads.filter((item) => item !== file.name);
       await AsyncStorage.setItem('downloads', JSON.stringify(updatedDownloads));
 
+      setDownloads(updatedDownloads);
+      setLocalUri(null);
       Alert.alert('Success', `${file.name} deleted successfully!`);
     } catch (error) {
-      console.error('Error deleting file:', error);
       Alert.alert('Error', `Error deleting ${file.name}: ${error.message}`);
     }
-  }, [file, localUri]);
+  }, [file, getDownloads]);
+
+  const deleteFromFileSystem = async (fileName) => {
+    try {
+      const filePath = `${FileSystem.documentDirectory}${fileName}`;
+      await FileSystem.deleteAsync(filePath);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
 
   // Confirm deletion before proceeding
   const confirmDeleteFile = useCallback(() => {
@@ -74,15 +82,15 @@ const SingleAudio = ({ file }) => {
       `Are you sure you want to delete ${file.name}?`,
       [
         { text: 'Cancel', style: 'cancel' },
-        { text: 'Delete', onPress: deleteFile, style: 'destructive' },
+        { text: 'Delete', onPress: handleDeleteFile, style: 'destructive' },
       ],
       { cancelable: true }
     );
-  }, [file, deleteFile]);
+  }, [handleDeleteFile, file.name]);
 
   // Load the local file if it exists
   useEffect(() => {
-    const loadDownload = async () => {
+    const loadFile = async () => {
       try {
         const localFilePath = `${FileSystem.documentDirectory}${file.name}`;
         const fileInfo = await FileSystem.getInfoAsync(localFilePath);
@@ -91,15 +99,14 @@ const SingleAudio = ({ file }) => {
 
         if (fileInfo.exists && isDownloaded) {
           setLocalUri(localFilePath);
-        }
+        };
       } catch (error) {
-        console.error('Error loading file:', error);
         Alert.alert('Error', `Error loading ${file.name}: ${error.message}`);
-      }
+      };
     };
 
-    loadDownload();
-  }, [file]);
+    loadFile();
+  }, [file, getDownloads]);
 
   return (
     <View className="flex-row items-center p-4 bg-gray-50 border-b border-gray-200 w-full rounded">
