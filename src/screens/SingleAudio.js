@@ -82,7 +82,7 @@ const SingleAudio = ({ file }) => {
   }, [file, getDownloads]);
 
   return (
-    <View className="flex-row items-center p-4 bg-gray-50 border-b border-gray-200 w-full rounded">
+    <View className="flex-row items-center p-4 mb-2 bg-gray-50 border-b border-gray-200 w-full rounded">
       <Text className="flex-1 text-base font-medium">{file.name}</Text>
       <ControllAudio
         localUri={localUri}
