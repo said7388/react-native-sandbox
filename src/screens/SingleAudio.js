@@ -1,4 +1,4 @@
- 
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as FileSystem from 'expo-file-system';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -7,7 +7,6 @@ import { AudioContext } from '../context/AudioContext';
 import ControllAudio from './ControllAudio';
 
 const SingleAudio = ({ file }) => {
-  const [downloading, setDownloading] = useState(false);
   const [localUri, setLocalUri] = useState(null);
   const { setDownloads } = React.useContext(AudioContext);
 
@@ -21,42 +20,6 @@ const SingleAudio = ({ file }) => {
       return [];
     }
   };
-
-  // Function to download the audio file
-  const downloadAudio = useCallback(async () => {
-    try {
-      setDownloading(true);
-      const localFilePath = `${FileSystem.documentDirectory}${file.name}`;
-      const downloadResult = await FileSystem.downloadAsync(
-        file.url,
-        localFilePath,
-      );
-
-      if (downloadResult.status === 200) {
-        const downloads = await getDownloads();
-        const isDownloaded = downloads.find(
-          (download) => download === file.name,
-        );
-        if (!isDownloaded) {
-          const updatedDownloads = [...downloads, file.name];
-          setDownloads(updatedDownloads);
-          await AsyncStorage.setItem(
-            'downloads',
-            JSON.stringify(updatedDownloads),
-          );
-        }
-        Alert.alert('Success', `${file.name} downloaded successfully!`);
-        setLocalUri(localFilePath);
-      } else {
-        Alert.alert('Error', `Failed to download ${file.name}`);
-      }
-    } catch (error) {
-      console.error('Error downloading file:', error);
-      Alert.alert('Error', `Error downloading ${file.name}: ${error.message}`);
-    } finally {
-      setDownloading(false);
-    }
-  }, [file]);
 
   // Function to delete the audio file
   const handleDeleteFile = useCallback(async () => {
@@ -124,8 +87,9 @@ const SingleAudio = ({ file }) => {
       <ControllAudio
         localUri={localUri}
         confirmDeleteFile={confirmDeleteFile}
-        downloadAudio={downloadAudio}
-        downloading={downloading}
+        setLocalUri={setLocalUri}
+        file={file}
+        getDownloads={getDownloads}
       />
     </View>
   );
